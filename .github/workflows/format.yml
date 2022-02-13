@@ -1,0 +1,28 @@
+name: CF
+
+on:
+    pull_request:
+        paths:
+            - "**.php"
+
+jobs:
+    php-cs-fixer:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: "8.1"
+
+            - name: Install
+              run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --optimize-autoloader
+
+            - name: Run
+              run: composer format
+
+            - uses: stefanzweifel/git-auto-commit-action@v4
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
